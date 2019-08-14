@@ -132,11 +132,6 @@
             	<class>Imagerecycle_Imagerecycle_Block</class>
 				
             </imagerecycle>
-            <core>
-            	<rewrite>
-            		<text>Imagerecycle_Imagerecycle_Block_Core_Text</text>
-            	</rewrite>
-            </core>
         </blocks>
 		
 		<helpers>

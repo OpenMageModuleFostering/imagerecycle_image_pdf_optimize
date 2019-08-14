@@ -1,8 +1,6 @@
 <div class="imagerecycle-container">
     <?php
-    $secret = Mage::getStoreConfig('mageio_api_secret');
-    $key = Mage::getStoreConfig('mageio_api_key');
-    if (empty($secret) || empty($key)) {
+    if (empty(Mage::getStoreConfig('mageio_api_secret')) || empty(Mage::getStoreConfig('mageio_api_key'))) {
         return;
     }
     ?>
