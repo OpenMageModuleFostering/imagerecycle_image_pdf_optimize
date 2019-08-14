@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<package>
+    <name>ImageRecycle_image_pdf_optimize</name>
+    <version>1.0.0</version>
+    <stability>stable</stability>
+    <license>GPL</license>
+    <channel>community</channel>
+    <extends/>
+    <summary>ImageRecycle is an automatic Image and PDF optimizer that speedup the page display</summary>
+    <description>ImageRecycle is an automatic Image and PDF content optimizer for Magento store. Your customers are waiting for your pages to load, it can takes long, especially on mobile devices. Even content is served fast by the server, slow connection can make your users leaving. &lt;br /&gt;&lt;br /&gt;&#xD;
+&#xD;
+People are impatient in front a slow loading website, that's the result of a recent study, 4 second loading causing 24% of visitors to leave (Source statistica.com.). Content optimization is more efficient than any other optimization tool.&lt;br /&gt;&lt;br /&gt;&#xD;
+&#xD;
+&#xD;
+&lt;h2&gt;Magento image optimization&lt;/h2&gt;&lt;br /&gt;&#xD;
+&#xD;
+Images can represent from 60% to 80% of a product page weight, so an optimization can accelerate your shop loading by x3 or more.&#xD;
+With an average of 25% of users that leave your website after 4 second of loading page, this is something crucial for your online business. And it's even more important on mobile devices were connection are usually slower.&#xD;
+&#xD;
+&#xD;
+&lt;h2&gt;Reduce image and pdf, not quality&lt;/h2&gt;&lt;br /&gt;&#xD;
+&#xD;
+The jpg, png, gif optimization algorithm is capable of reducing the image size by up to 85% (5x +), while the resulting photos are visually identical to the originals. We believe that image and pdf compression is a matter preserving the quality then reduce the size. Reducing the image and pdf size can be done using a massive compression of data and result a worsened quality. We detect already compressed media and return original files.&#xD;
+&#xD;
+&#xD;
+&lt;h2&gt;Main features:&lt;/h2&gt;&lt;br /&gt;&#xD;
+&#xD;
+- Compress automatically new images &amp;amp; pdf&#xD;
+- Compress automatically existing images &amp;amp; pdf&#xD;
+- Image automatic resizing&#xD;
+- Define an optimization quality images per media type&#xD;
+- Define a min-max size to optimize&#xD;
+- Optimize png, jpg, gif&#xD;
+- Define optimization quality per file type, jpg, png, gif</description>
+    <notes>First stable release</notes>
+    <authors><author><name>ImageRecycle</name><user>ImageRecycle</user><email>contact@imagerecycle.com</email></author></authors>
+    <date>2015-07-07</date>
+    <time>13:16:36</time>
+    <contents><target name="magecommunity"><dir name="Imagerecycle"><dir name="Imagerecycle"><dir name="Block"><file name="Images.php" hash="b9b9fe9c0d0a177fc4b68267a88b0e9e"/></dir><dir name="Helper"><file name="Data.php" hash="0c20c4a7fab920f9e05f3eb9dcd087e5"/></dir><dir name="Model"><file name="Observer.php" hash="ecd7abe292e072f6c02badfb8815ba4b"/><dir name="Resource"><dir name="Images"><file name="Collection.php" hash="a8f7aba5403f8469959053630e509898"/></dir><file name="Images.php" hash="82c27d80a05aa3af8329100ad1ca2762"/><file name="Setup.php" hash="7950a28c598f21168a319fcbf7946583"/></dir></dir><dir name="classes"><file name="ioa.class.php" hash="fe94031507a893481a7db8dd2b5dfdde"/></dir><dir name="controllers"><file name="IndexController.php" hash="0a20b9a53bdf7f76705c33b46f4f6c30"/></dir><dir name="etc"><file name="adminhtml.xml" hash="66cb48702ff1456d6ca9fbff533f3ee4"/><file name="config.xml" hash="55543338ab5453522a4a1642df12eda7"/></dir><dir name="sql"><dir name="imagerecycle_setup"><file name="mysql4-install-1.0.0.php" hash="e9113b9c19d91ed6cebd34180c90ff76"/></dir></dir></dir></dir></target><target name="mageweb"><dir name="js"><dir name="imagerecycle"><dir name="imagerecycle"><file name="bluebox.js" hash="36304b24f301b11d5abc23d6b5c1ef45"/><file name="jquery.min.js" hash="8101d596b2b8fa35fe3a634ea342d7c3"/><file name="script.js" hash="1f324e0446a2667ef8784b4213908790"/></dir></dir></dir></target><target name="mageskin"><dir name="adminhtml"><dir name="default"><dir name="default"><dir name="imagerecycle"><dir name="imagerecycle"><file name="imagerecycle.css" hash="5c70db79a6e7ac29b0b1e9927ae6f31f"/><dir name="images"><file name="ajax-loader-tr.gif" hash="1ae32bc8232ff2527c627e5b38eb319a"/><file name="gift-message-collapse.gif" hash="5b710f5faa9c7352a39c10e3ebbee6fc"/><file name="gift-message-expand.gif" hash="fd53a70cbb1ea048754657a63787e9cb"/><file name="grouped_to_order_icon.png" hash="4bdae9a6199655027b8b8aeee8f80ce4"/><file name="i_question-mark.png" hash="23201b7ac207eebd9be0776ea44098a4"/><file name="pdf.png" hash="9c819141f3537f9f3ea181369332be85"/></dir></dir></dir></dir></dir></dir></target></contents>
+    <compatible/>
+    <dependencies><required><php><min>5.3.0</min><max>5.6.0</max></php></required></dependencies>
+</package>

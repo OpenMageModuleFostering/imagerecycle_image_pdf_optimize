@@ -1,0 +1,16 @@
+{
+    "name": "OpenMageModuleFostering/ImageRecycle_image_pdf_optimize",
+    "type": "magento-module",
+    "license": "GPL",
+    "homepage": "",
+    "description": "ImageRecycle is an automatic Image and PDF optimizer that speedup the page display",
+    "authors": [
+    {
+        "name": "ImageRecycle",
+        "email": "contact@imagerecycle.com"
+    }
+],
+    "suggest": {
+        "magento-hackathon/magento-composer-installer": "*"
+    }
+}
