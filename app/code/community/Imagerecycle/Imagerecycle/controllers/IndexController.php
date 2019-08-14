@@ -35,6 +35,13 @@ Class Imagerecycle_Imagerecycle_IndexController extends Mage_Adminhtml_Controlle
                 $response->success = true;
             }
         }
+		$installed_time =  Mage::getStoreConfig('mageio_installed_time');               
+        if(empty($installed_time)) {
+            $installed_time = time();
+            $coreConfig = Mage::getConfig();
+            $coreConfig->saveConfig('mageio_installed_time', $installed_time);                 
+        }
+		
 		$cache = Mage::getSingleton('core/cache');
         $cache->flush();
         $response->msg = "All modifications were saved!";

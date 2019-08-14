@@ -56,20 +56,13 @@ Class Imagerecycle_Imagerecycle_Helper_Data extends Mage_Core_Helper_Abstract{
         $resize_image = $this->settings['resize_image'];
         $resize_auto = $this->settings['resize_auto'];        
         if($resize_image && $resize_auto) {   //Only apply on new images
-            $installed_time = (int)$this->settings['installed_time'];           
-            if(empty($installed_time)) {
-                $installed_time = time();
-                $coreConfig = Mage::getConfig();
-                $coreConfig->saveConfig('installed_time', $installed_time);                 
-            }
-        
-            $size = @getimagesize($file);
-            $fileCreated = filectime($file);                        
-            if($size && ($size[0]> $resize_image) && ($fileCreated > $installed_time) ) {
+                   		
+            $size = @getimagesize($file);                               
+            if($size && ($size[0]> $resize_image) ) {
                 $fparams['resize'] =  array("width"=> $resize_image);
             }
         }
-        
+       
         include_once(Mage::getModuleDir('', 'Imagerecycle_Imagerecycle') . '/classes/ioa.class.php');
         $ioa = new ioaphp($this->settings['api_key'], $this->settings['api_secret']);                   
         $return = $ioa->uploadFile($file,$fparams);
