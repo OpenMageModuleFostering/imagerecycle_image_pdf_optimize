@@ -12,6 +12,8 @@ $installer->run("
 	   `size_before` int(11) NOT NULL,
 	   `size_after` int(11) NOT NULL,	   
 	   `date` datetime NOT NULL,
+	   `name` varchar(250) NOT NULL,
+	   `ext` varchar(250) NOT NULL,
 	   PRIMARY KEY (`id`)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 ");

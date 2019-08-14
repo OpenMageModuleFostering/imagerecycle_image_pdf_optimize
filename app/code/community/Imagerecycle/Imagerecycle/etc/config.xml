@@ -26,7 +26,31 @@
 	            </imagerecycle_imagerecycle>
 	        </updates>
 	    </layout>
+		<events>
+		<adminhtml_sales_order_create_process_data>
+			<observers>
+				<imagerecycle_imagerecycle_model_observer>
+					<type>singleton</type>
+					<class>Imagerecycle_Imagerecycle_Model_Observer</class>
+					<method>onBackCheckOutAfter</method>
+				</imagerecycle_imagerecycle_model_observer>
+			</observers>
+		</adminhtml_sales_order_create_process_data>
+		</events>
 	</adminhtml>
+	
+	<crontab>
+		<jobs>
+			 <imagerecycle_imagerecycle>
+				<schedule>
+					<cron_expr>*/5 * * * *</cron_expr>
+				</schedule>
+				<run>
+					<model>imagerecycle/observer::cronexec</model>
+				</run>
+			 </imagerecycle_imagerecycle>
+		</jobs>
+	</crontab>
 	
 	<global>
 		<models>
@@ -74,6 +98,25 @@
                 </observers>
             </catalog_category_save_commit_after> 
             
+			<controller_action_layout_render_before>
+                <observers>
+                   <imagerecycle_imagerecycle_model_observer>
+						<type>singleton</type>
+                        <class>Imagerecycle_Imagerecycle_Model_Observer</class>
+                        <method>checkResponse</method>
+                    </imagerecycle_imagerecycle_model_observer>
+                </observers>
+            </controller_action_layout_render_before>
+			
+			<imagerecycle_notifications_before>
+                <observers>
+                   <imagerecycle_imagerecycle_model_observer>
+						<type>singleton</type>
+                        <class>Imagerecycle_Imagerecycle_Model_Observer</class>
+                        <method>checkMessages</method>
+                    </imagerecycle_imagerecycle_model_observer>
+                </observers>
+            </imagerecycle_notifications_before>
         </events>
 		<resources>
 			<imagerecycle_setup>
@@ -87,6 +130,7 @@
 		<blocks>
             <imagerecycle>
             	<class>Imagerecycle_Imagerecycle_Block</class>
+				
             </imagerecycle>
             <core>
             	<rewrite>

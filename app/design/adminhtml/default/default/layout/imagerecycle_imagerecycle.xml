@@ -1,13 +1,41 @@
 <?xml version="1.0"?>
 <layout>
+	<default>
+		<reference name="notifications">
+            <block type="imagerecycle/notifications" name="notifications_imagerecycle" />
+        </reference>
+	</default>
 	<imagerecycle_index_index>
             <reference name="content">
-		<block type="imagerecycle/images" name="recycleimage" template="imagerecycle/imagerecycle/images.phtml" />
+				<block type="imagerecycle/images" name="recycleimage" template="imagerecycle/imagerecycle/images.phtml"/>
+				<block type="imagerecycle/images/connect" name="recycleimage_connect" template="imagerecycle/imagerecycle/connect.phtml"/>
             </reference>
             <reference name="head">
                 <action method="addJs"><script>imagerecycle/imagerecycle/jquery.min.js</script></action>
-                <action method="addJs"><script>imagerecycle/imagerecycle/script.js</script></action>                                       
-                <action method="addCss"><name>imagerecycle/imagerecycle/imagerecycle.css</name></action>
+                <action method="addJs"><script>imagerecycle/imagerecycle/script.js</script></action> 
+                <action method="addJs"><script>imagerecycle/imagerecycle/thickbox.js</script></action>
+				<action method="addCss"><name>imagerecycle/imagerecycle/imagerecycle.css</name></action>	
+                <action method="addCss"><name>imagerecycle/imagerecycle/thickbox.css</name></action>
             </reference>
 	</imagerecycle_index_index>
+	
+	<imagerecycle_index_saveconfig>
+			<reference name="content">
+				<block type="imagerecycle/settings" name="settingsimage" template="imagerecycle/imagerecycle/settings.phtml" />
+            </reference>
+			
+			<reference name="head">
+				<action method="addJs"><script>imagerecycle/imagerecycle/jquery.min.js</script></action>
+				<action method="addJs"><script>imagerecycle/imagerecycle/jaofiletree.js</script></action> 
+				<action method="addJs"><script>imagerecycle/imagerecycle/thickbox.js</script></action>
+				<action method="addJs"><script>imagerecycle/imagerecycle/jquery.reveal.js</script></action>
+                <action method="addJs"><script>imagerecycle/imagerecycle/config.js</script></action>
+				<action method="addCss"><name>imagerecycle/imagerecycle/imagerecycle.css</name></action>
+				<action method="addCss"><name>imagerecycle/imagerecycle/jaofiletree.css</name></action>
+				<action method="addCss"><name>imagerecycle/imagerecycle/thickbox.css</name></action>	
+			    <action method="addCss"><name>imagerecycle/imagerecycle/reveal.css</name></action>	
+			</reference>
+	</imagerecycle_index_saveconfig>
+	
+	
 </layout>

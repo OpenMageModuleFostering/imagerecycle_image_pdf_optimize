@@ -1,0 +1,389 @@
+<script>page="config";</script>
+<div class="imagerecycle-container">
+    <div class="content-header">
+        <h3><?php echo Mage::helper('imagerecycle')->__('Image recycle setttings') ?></h3>
+    </div>
+    
+    <!-- ################### Quota usage information ################## -->
+    
+    <h4>Optimization quota usage</h4>
+    
+    <?php
+    include_once(Mage::getBaseDir('app') . '/code/community/Imagerecycle/Imagerecycle/classes/ioa.class.php');
+    $ioa = new ioaphp(Mage::getStoreConfig('mageio_api_key'), Mage::getStoreConfig('mageio_api_secret'));
+    $return = $ioa->getAccountInfos();
+    $percentQuota = 0;
+    $consumption_text = "";
+    
+    if ($return && (floatval($return->quota_allowed) > 0)) {
+        $consumption_text = 'Consummated quota from' . " " . date('d F Y', $return->quota_start) . " " .
+            'to' . " " . date('d F Y', $return->quota_end) . ":" .
+            "<b>" . $this->formateBytes(floatval($return->quota_current)) . "/ " .
+            $this->formateBytes(floatval($return->quota_allowed)) . "</b>";
+    
+        $percentQuota = number_format(min(($return->quota_current / $return->quota_allowed), 1) * 100, 2);
+    
+        echo '<p>'.$consumption_text . '(' . $percentQuota . '%)</p>';
+    
+        echo '<div class="ir-progress-wrap">
+                <div class="ir-progress-bar" style="width: '.$percentQuota.'%"></div>
+                        <span>'.$percentQuota.'%</span>
+                    </div>';
+    
+    } else if ($return) {
+        $consumption_text = 'Consummated quota from' . " " . date('d F Y', $return->quota_start) . " " .
+            'to' . " " . date('d F Y', $return->quota_end) .
+            ": " . $this->formateBytes(floatval($return->quota_current));
+        echo '<p>' . $consumption_text . '</p>';
+    
+    } else {
+        $consumption_text = 'Connection error';
+        echo '<p>' . $consumption_text . '</p>';
+    
+    }
+    ?>
+    <a href="https://www.imagerecycle.com/prices" target="_blank" class="get-quota-btn button">
+        <?php echo Mage::helper("imagerecycle")->__("Get optimization quota") ?>
+    </a>
+    
+    <div class="clear"></div>
+    
+    <!-- ################### Main module settings form ################## -->
+    
+    <h4>Settings</h4>
+    
+    <?php
+    $compress_auto = !is_null($this->settings['compress_auto']) ? $this->settings['compress_auto'] : 0;
+    $cron_periodicity = !is_null($this->settings['cron_periodicity']) ? $this->settings['cron_periodicity'] : '5mins';
+    ?>
+    
+    <script type="text/javascript">
+        var getFolders_url = '<?php echo Mage::helper("adminhtml")->getUrl("imagerecycle/index/getFolders") ?>?isAjax=true';
+        var index_url = '<?php echo Mage::helper("adminhtml")->getUrl("imagerecycle/index/index") ?>';
+        var cron_url = '<?php echo Mage::getBaseUrl() . 'imagerecycle/ImageAll/index?id=cronurl' ?>';
+        var is_compress_auto = '<?php echo $compress_auto; ?>';
+        var cron_periodicity = '<?php echo $cron_periodicity; ?>';
+        var reindex_init_url = '<?php echo Mage::helper("adminhtml")->getUrl("imagerecycle/index/reindexInit") ?>';
+    </script>
+    
+    
+    <div class="ir-setting">
+        <form action="<?php echo Mage::helper("adminhtml")->getUrl("imagerecycle/index/saveSetting"); ?>" method="POST">
+            <table class="form-table">
+                <tbody>
+                <input id="installed_time" class="formData" name="installed_time" type="hidden"
+                       value="<?php echo Mage::getStoreConfig('mageio_installed_time'); ?>" size="50"/>
+                <tr>
+                    <th scope="row"><?php echo Mage::helper('imagerecycle')->__('API key : ') ?></th>
+                    <td colspan="2">
+                        <input id="api_key" class="formData" name="api_key" type="text"
+                               value="<?php echo $this->escapeHtml(Mage::getStoreConfig('mageio_api_key')); ?>" size="50"/>
+                    </td>
+                </tr>
+    
+                <tr>
+                    <th scope="row"><?php echo Mage::helper('imagerecycle')->__('API secret : ') ?></th>
+                    <td colspan="2">
+                        <input id="api_secret" class="formData" name="api_secret" type="text"
+                               value="<?php echo $this->escapeHtml(Mage::getStoreConfig('mageio_api_secret')); ?>" size="50"/>
+                    </td>
+                </tr>
+    
+    
+                <tr>
+                    <th scope="row"><?php echo Mage::helper('imagerecycle')->__('Include folders : ') ?></th>
+                    <td colspan="2">
+                        <?php
+    
+                        $include_folders = $this->settings['include_folders'];
+                        $selected_folders = explode(',', $include_folders);
+    
+                        ?>
+                        <input id="include_folders" class="formData" name="include_folders"
+                               readonly='readonly' type="text" value="<?php echo $this->escapeHtml($include_folders); ?>"
+                               size="50"/>
+    
+                        <a href="#" class="button" data-reveal-id="myModal"> browse </a>
+                    </td>
+                </tr>
+    
+    
+                <!--  Optimize Reinitialize index yes and no  -->
+                <tr>
+                    <th scope="row"><?php echo Mage::helper('imagerecycle')->__('Reinitialize media indexation after') ?></th>
+                    <td colspan="2">
+                        <?php
+                        $reindex_init = !is_null($this->settings['reindex_init']) ? $this->settings['reindex_init'] : 0;
+                        ?>
+                        <select id="reindex_init" name="reindex_init">
+                            <option value="0" <?php if ($reindex_init == 0) {
+                                echo 'selected="selected"';
+                            } ?> >Never
+                            </option>
+                            <option value="5" <?php if ($reindex_init == 5) {
+                                echo 'selected="selected"';
+                            } ?> >5mins
+                            </option>
+                            <option value="10" <?php if ($reindex_init == 10) {
+                                echo 'selected="selected"';
+                            } ?> >10mins
+                            </option>
+                            <option value="20" <?php if ($reindex_init == 20) {
+                                echo 'selected="selected"';
+                            } ?> >20mins
+                            </option>
+                            <option value="30" <?php if ($reindex_init == 30) {
+                                echo 'selected="selected"';
+                            } ?> >30mins
+                            </option>
+                            <option value="60" <?php if ($reindex_init == 60) {
+                                echo 'selected="selected"';
+                            } ?> >1h
+                            </option>
+                            <option value="120" <?php if ($reindex_init == 120) {
+                                echo 'selected="selected"';
+                            } ?> >2h
+                            </option>
+                            <option value="360" <?php if ($reindex_init == 360) {
+                                echo 'selected="selected"';
+                            } ?> >6h
+                            </option>
+                            <option value="720" <?php if ($reindex_init == 720) {
+                                echo 'selected="selected"';
+                            } ?> >12h
+                            </option>
+                            <option value="1440" <?php if ($reindex_init == 1440) {
+                                echo 'selected="selected"';
+                            } ?> >24h
+                            </option>
+                            <option value="2880" <?php if ($reindex_init == 2880) {
+                                echo 'selected="selected"';
+                            } ?> >48h
+                            </option>
+                        </select>
+                        <button class="do-index button" href="#"><?php echo Mage::helper('imagerecycle')->__('Force reindex images') ?></button>
+                    </td>
+                </tr>
+    
+                <!-------------------------             This is the current customizing area---------------------------->
+                <!--  Optimize media on saving  yes and no  -->
+                <tr>
+                    <th scope="row"><?php echo Mage::helper('imagerecycle')->__('Optimize media on saving') ?></th>
+                    <td colspan="2">
+                        <?php
+                        $saving_auto = !is_null($this->settings['saving_auto']) ? $this->settings['saving_auto'] : 0;
+                        ?>
+    
+                        <select id="saving_auto" name="saving_auto">
+                            <option value="0" <?php if ($saving_auto == 0) {
+                                echo 'selected="selected"';
+                            } ?> >No
+                            </option>
+                            <option value="1" <?php if ($saving_auto == 1) {
+                                echo 'selected="selected"';
+                            } ?> >Yes
+                            </option>
+                        </select>
+                    </td>
+                </tr>
+    
+                <!----------------------    This is the auto compress yes and no ------------------------------->
+                <tr id='compress_auto_setting'>
+                    <th scope="row"><?php echo Mage::helper('imagerecycle')->__('Automatic compression') ?></th>
+                    <td colspan="2">
+    
+                        <select id="compress_auto" name="compress_auto">
+                            <option value="0" <?php if ($compress_auto == 0) {
+                                echo 'selected="selected"';
+                            } ?> >No automatic compression
+                            </option>
+                            <option value="1" <?php if ($compress_auto == 1) {
+                                echo 'selected="selected"';
+                            } ?> >Magento inbuilt cron task
+                            </option>
+                            <option value="2" <?php if ($compress_auto == 2) {
+                                echo 'selected="selected"';
+                            } ?> >Custom cron task
+                            </option>
+                        </select>
+                    </td>
+                </tr>
+    
+    
+                <!----------------------                                                ------------------------------->
+                <tr>
+                    <th scope="row"><?php echo Mage::helper('imagerecycle')->__('Image resize') ?></th>
+                    <td colspan="2">
+                        <?php
+                        $resize_auto = !is_null($this->settings['resize_auto']) ? $this->settings['resize_auto'] : 0;
+                        ?>
+    
+                        <select id="resize_auto" name="resize_auto">
+                            <option value="0" <?php if ($resize_auto == 0) {
+                                echo 'selected="selected"';
+                            } ?> >No
+                            </option>
+                            <option value="1" <?php if ($resize_auto == 1) {
+                                echo 'selected="selected"';
+                            } ?> >Yes
+                            </option>
+                        </select>
+                    </td>
+                </tr>
+    
+                <tr>
+                    <td colspan="3">
+                        <?php echo Mage::helper('imagerecycle')->__('<strong>Use with caution!</strong> All new images will size more than setting will be resized automatically on upload') ?>
+                    </td>
+                </tr>
+    
+                <tr>
+                    <th scope="row"><?php echo Mage::helper('imagerecycle')->__('Image resize, max size (px)') ?></th>
+                    <td>
+                        <?php $resize_image = !is_null($this->settings['resize_image']) ? $this->settings['resize_image'] : 1600; ?>
+                        <input id="resize_image" class="formData" name="resize_image" type="text"
+                               value="<?php echo $this->escapeHtml($resize_image); ?>" size="10"/>
+                    </td>
+                </tr>
+    
+                <tr>
+                    <th scope="row">
+                        <?php echo Mage::helper('imagerecycle')->__('Min file size to optimize (Kb)') ?></th>
+                    <td>
+                        <?php $minSize = !is_null($this->settings['min_size']) ? $this->settings['min_size'] : 1; ?>
+                        <input id="min_size" class="formData" name="min_size" type="text"
+                               value="<?php echo $this->escapeHtml($minSize); ?>" size="10"/>
+                    </td>
+                    </th>
+                </tr>
+    
+                <tr>
+                    <th scope="row">
+                        <?php echo Mage::helper('imagerecycle')->__('Max file size to optimize (Kb)') ?></th>
+                    <td>
+                        <?php $maxSize = !is_null($this->settings['max_size']) ? $this->settings['max_size'] : 10000; ?>
+                        <input id="max_size" class="formData" name="max_size" type="text"
+                               value="<?php echo $this->escapeHtml($maxSize); ?>" size="10"/>
+                    </td>
+                </tr>
+    
+    
+                <tr>
+                    <th scope="row">
+                        <input id="compression_type" class="formData" name="compression_type" type="hidden"
+                               value="lossy" size="50"/>
+                        <?php echo Mage::helper('imagerecycle')->__('Compression type - PDF:') ?> </th>
+                    <td>
+                        <select id="compression_type_pdf" class="formData" name="compression_type_pdf">
+                            <option
+                                value="lossy" <?php if ($this->settings['compression_type_pdf'] == 'lossy') echo 'selected="selected"'; ?> >
+                                Best saving
+                            </option>
+                            <option
+                                value="lossless" <?php if ($this->settings['compression_type_pdf'] == 'lossless') echo 'selected="selected"'; ?>>
+                                Original quality
+                            </option>
+                            <option
+                                value="none" <?php if ($this->settings['compression_type_pdf'] == 'none') echo 'selected="selected"'; ?>>
+                                No compression
+                            </option>
+                        </select>
+                    </td>
+    
+                </tr>
+    
+                <tr>
+                    <th scope="row">
+                        <?php echo Mage::helper('imagerecycle')->__('Compression type - PNG:') ?> </th>
+                    <td>
+                        <select id="compression_type_png" class="formData" name="compression_type_png">
+                            <option
+                                value="lossy" <?php if ($this->settings['compression_type_png'] == 'lossy') echo 'selected="selected"'; ?> >
+                                Best saving
+                            </option>
+                            <option
+                                value="lossless" <?php if ($this->settings['compression_type_png'] == 'lossless') echo 'selected="selected"'; ?>>
+                                Original quality
+                            </option>
+                            <option
+                                value="none" <?php if ($this->settings['compression_type_png'] == 'none') echo 'selected="selected"'; ?>>
+                                No compression
+                            </option>
+                        </select>
+                    </td>
+    
+                </tr>
+    
+                <tr>
+                    <th scope="row">
+                        <?php echo Mage::helper('imagerecycle')->__('Compression type - JPG:') ?> </th>
+                    <td>
+                        <select id="compression_type_jpg" class="formData" name="compression_type_jpg">
+                            <option
+                                value="lossy" <?php if ($this->settings['compression_type_jpg'] == 'lossy') echo 'selected="selected"'; ?> >
+                                Best saving
+                            </option>
+                            <option
+                                value="lossless" <?php if ($this->settings['compression_type_jpg'] == 'lossless') echo 'selected="selected"'; ?>>
+                                Original quality
+                            </option>
+                            <option
+                                value="none" <?php if ($this->settings['compression_type_jpg'] == 'none') echo 'selected="selected"'; ?>>
+                                No compression
+                            </option>
+                        </select>
+                    </td>
+                </tr>
+    
+                <tr>
+                    <th scope="row">
+                        <?php echo Mage::helper('imagerecycle')->__('Compression type - GIF:') ?>
+                    </th>
+    
+                    <td>
+                        <select id="compression_type_gif" class="formData" name="compression_type_gif">
+                            <option
+                                value="lossy" <?php if ($this->settings['compression_type_gif'] == 'lossy') echo 'selected="selected"'; ?> >
+                                Best saving
+                            </option>
+                            <option
+                                value="lossless" <?php if ($this->settings['compression_type_gif'] == 'lossless') echo 'selected="selected"'; ?>>
+                                Original quality
+                            </option>
+                            <option
+                                value="none" <?php if ($this->settings['compression_type_gif'] == 'none') echo 'selected="selected"'; ?>>
+                                No compression
+                            </option>
+                        </select>
+                    </td>
+                </tr>
+    
+    
+                <tr>
+    
+                    <td colspan="3">
+                        <input name="form_key" type="hidden" value="<?php echo Mage::getSingleton('core/session')->getFormKey() ?>"/>
+                        <button type="submit" id="ir-setting-save" class="button"><?php echo Mage::helper('imagerecycle')->__('Save') ?></button>
+                        <a id="ir-setting-save" class="button"
+                               href='<?php echo Mage::helper("adminhtml")->getUrl("imagerecycle/index/index") ?>'>
+                                <?php echo Mage::helper('imagerecycle')->__('Cancel') ?></a>
+                    </td>
+                </tr>
+    
+                </tbody>
+            </table>
+        </form>
+    </div>
+    
+    
+    <!-- Modal window -->
+    <div id="myModal" class="reveal-modal">
+    
+        <script type="text/javascript">
+            var curFolders = <?php echo json_encode($selected_folders);?>;
+        </script>
+        <div id="wpio_foldertree"></div>
+        <button class="close-reveal-modal button" type="button" onclick="jSelectFolders()">OK</button>
+        <button class="close-reveal-modal button">Close</button>
+    </div>
+</div>

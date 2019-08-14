@@ -25,7 +25,8 @@ class ioaphp {
      * @param string $secret
      */
     public function __construct($key,$secret){
-	$this->auth = array('key'=>$key, 'secret'=>$secret);	
+			
+		$this->auth = array('key'=>$key, 'secret'=>$secret);	
     }
     
     /**
@@ -33,7 +34,7 @@ class ioaphp {
      * @param string $url
      */
     public function setAPIUrl($url){
-	$this->apiUrl = $url;
+		$this->apiUrl = $url;
     }
     
     /**
@@ -41,27 +42,27 @@ class ioaphp {
      * @param $_FILES $file posted file
      */
     public function uploadFile($file,$params=array()){
-	if(class_exists('CURLFile')){
-	    $curlFile = new CURLFile($file);
-	}else{
-	    $curlFile = '@'.$file;
-	}	
-     
-	$params = array(
-	    'auth' => json_encode($this->auth),
-	    'file' => $curlFile,
-	    'params' => json_encode( $params)			    
-	);
-        
-	try {
-	    $result = $this->callAPI($this->apiUrl.'images/','POST',$params);
-           
-	} catch (Exception $exc) {
-	    $this->lastError = $exc->getMessage();
-	    return  $this->lastError;// false;
-	}
-           
-	return $result;
+		if(class_exists('CURLFile')){
+			$curlFile = new CURLFile($file);
+		}else{
+			$curlFile = '@'.$file;
+		}	
+		 
+		$params = array(
+			'auth' => json_encode($this->auth),
+			'file' => $curlFile,
+			'params' => json_encode( $params)			    
+		);
+			
+		try {
+			$result = $this->callAPI($this->apiUrl.'images/','POST',$params);
+			   
+		} catch (Exception $exc) {
+			$this->lastError = $exc->getMessage();
+			return  $this->lastError;// false;
+		}
+			   
+		return $result;
     }
     
     /**
@@ -84,6 +85,38 @@ class ioaphp {
 	return $result;
     }
     
+	public function headRequest($url,$data) {
+            
+		if( function_exists('curl_version')) {
+		
+			$ch = curl_init();
+			curl_setopt ($ch, CURLOPT_URL, $url); 				
+			curl_setopt($ch, CURLOPT_POST, 1);
+			curl_setopt($ch, CURLOPT_POSTFIELDS, $data);  //send the dat
+			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+			curl_setopt ($ch, CURLOPT_RETURNTRANSFER, 1); //TRUE to return the transfer as a string of the return value of curl_exec() instead of outputting it out directly.
+			curl_setopt ($ch, CURLOPT_URL, $url);  //The URL to fetch. This can also be set when initializing a session with curl_init(). 
+			curl_setopt ($ch, CURLOPT_CONNECTTIMEOUT, 20);//The number of seconds to wait while trying to connect. Use 0 to wait indefinitely. 
+			curl_setopt ($ch, CURLOPT_TIMEOUT_MS, 1000);  //The number of milliseconds to wait while trying to connect. Use 0 to wait indefinitely. If libcurl is built to use the standard system name resolver, that portion of the connect will still use full-second resolution for timeouts with a minimum timeout allowed of one second. 
+			curl_setopt ($ch, CURLOPT_USERAGENT, $_SERVER['HTTP_USER_AGENT']);  // The contents of the "User-Agent: " header to be used in a HTTP request.
+
+			$content = curl_exec ($ch);
+			curl_close ($ch);
+			return $content;
+        }else {
+            
+            $ctx = stream_context_create(
+                array('http'=>
+                        array(
+                            'timeout' => 1,  
+                        )
+                )
+            );
+            echo file_get_contents($url, false, $ctx);
+        }
+     }
+
+	
     /**
      * Call the API with curl
      * @param string $url
@@ -196,18 +229,19 @@ class ioaphp {
      * @return type
      */
     public function getAccountInfos(){
-	$params = array(
-	    'auth' => json_encode($this->auth),
-	    'params' => ''
-	);
-	
-	try {
-	    $result = $this->callAPI($this->apiUrl.'accounts/mine','GET',$params);
-	} catch (Exception $exc) {
-	    $this->lastError = $exc->getMessage();
-	    return false;
-	}
-	return $result;
+		
+		$params = array(
+			'auth' => json_encode($this->auth),
+			'params' => ''
+		);
+		try {
+			$result = $this->callAPI($this->apiUrl.'accounts/mine','GET',$params);
+		} catch (Exception $exc) {
+			
+			$this->lastError = $exc->getMessage();
+			return false;
+		}
+		return $result;
     }
     
     /**
@@ -215,7 +249,23 @@ class ioaphp {
      * @return string
      */
     public function getLastError(){
-	return $this->lastError;
+		return $this->lastError;
     }
+		
+	/*test the database*/
+	public function getData(){
+	/**
+	 * Get the table name
+	 */	
+		$resourceR = Mage::getSingleton('core/resource')->getConnection('core_read');
+        $tableName = $resourceR->getTableName('a/imagerecycle'); 
+		
+		var_dump($tableName);
+		exit(1);
+		
+	}
 }
+		
+		
+		
 ?>
