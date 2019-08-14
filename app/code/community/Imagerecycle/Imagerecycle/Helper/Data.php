@@ -5,21 +5,20 @@ Class Imagerecycle_Imagerecycle_Helper_Data extends Mage_Core_Helper_Abstract{
     public $settings = null;
     
     public function getSettings() {    
-        return array(
-            'mageio_api_api_url' =>  Mage::getStoreConfig('mageio_api_api_url') ,
-            'mageio_api_api_key' => Mage::getStoreConfig('mageio_api_api_key'),
-            'mageio_api_api_secret' => Mage::getStoreConfig('mageio_api_api_secret'),            
-            'installed_time'  => Mage::getStoreConfig('installed_time'),
-            'exclude_folders'  => Mage::getStoreConfig('exclude_folders'),            
-            'resize_auto'  => Mage::getStoreConfig('resize_auto'), 
-            'resize_image'  => Mage::getStoreConfig('resize_image'),    
-            'min_size'  => Mage::getStoreConfig('min_size'),    
-            'max_size'  => Mage::getStoreConfig('max_size'),    
-            'compression_type_pdf'  => Mage::getStoreConfig('compression_type_pdf'),    
-            'compression_type_png'  => Mage::getStoreConfig('compression_type_png'),    
-            'compression_type_jpg'  => Mage::getStoreConfig('compression_type_jpg'),    
-            'compression_type_gif'  => Mage::getStoreConfig('compression_type_gif'),    
-            'compression_type'  => Mage::getStoreConfig('compression_type'),    
+        return array(           
+            'api_key' => Mage::getStoreConfig('mageio_api_key'),
+            'api_secret' => Mage::getStoreConfig('mageio_api_secret'),            
+            'installed_time'  => Mage::getStoreConfig('mageio_installed_time'),
+            'exclude_folders'  => Mage::getStoreConfig('mageio_exclude_folders'),            
+            'resize_auto'  => Mage::getStoreConfig('mageio_resize_auto'), 
+            'resize_image'  => Mage::getStoreConfig('mageio_resize_image'),    
+            'min_size'  => Mage::getStoreConfig('mageio_min_size'),    
+            'max_size'  => Mage::getStoreConfig('mageio_max_size'),    
+            'compression_type_pdf'  => Mage::getStoreConfig('mageio_compression_type_pdf'),    
+            'compression_type_png'  => Mage::getStoreConfig('mageio_compression_type_png'),    
+            'compression_type_jpg'  => Mage::getStoreConfig('mageio_compression_type_jpg'),    
+            'compression_type_gif'  => Mage::getStoreConfig('mageio_compression_type_gif'),    
+            'compression_type'  => Mage::getStoreConfig('mageio_compression_type'),    
         );
     }
     public function optimize($image, $savePath='') {
@@ -47,8 +46,8 @@ Class Imagerecycle_Imagerecycle_Helper_Data extends Mage_Core_Helper_Abstract{
         $compressionType= $this->settings['compression_type_'.$ext];
         if($compressionType=='none') return $response;
                 
-        if (!$this->settings['mageio_api_api_key'] || !$this->settings['mageio_api_api_secret'] || !$this->settings['mageio_api_api_url']
-        ) {
+        if (!$this->settings['api_key'] || !$this->settings['api_secret'] ) 
+        {
 
             $response->msg = Mage::helper('imagerecycle')->__("You haven't configured Image recycle setting correctly yet.");
             return $response;
@@ -72,9 +71,7 @@ Class Imagerecycle_Imagerecycle_Helper_Data extends Mage_Core_Helper_Abstract{
         }
         
         include_once(Mage::getModuleDir('', 'Imagerecycle_Imagerecycle') . '/classes/ioa.class.php');
-        $ioa = new ioaphp($this->settings['mageio_api_api_key'], $this->settings['mageio_api_api_secret']);
-        $ioa->setAPIUrl($this->settings['mageio_api_api_url']);
-            
+        $ioa = new ioaphp($this->settings['api_key'], $this->settings['api_secret']);                   
         $return = $ioa->uploadFile($file,$fparams);
          Mage::log($return);
        

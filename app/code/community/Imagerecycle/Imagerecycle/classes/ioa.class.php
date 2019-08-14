@@ -10,7 +10,7 @@ class ioaphp {
      * Image Optimize API Url
      * @var string api url
      */
-    protected $apiUrl = 'http://imageoptim/api/v1/';
+    protected $apiUrl = 'https://api.imagerecycle.com/v1/';
 
     /**
      * Last Error message

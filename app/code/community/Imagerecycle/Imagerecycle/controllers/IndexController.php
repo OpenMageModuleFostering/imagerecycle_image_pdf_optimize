@@ -24,18 +24,19 @@ Class Imagerecycle_Imagerecycle_IndexController extends Mage_Adminhtml_Controlle
 
         $response = new stdClass();
         $response->success = false;
-        $configKey = array('mageio_api_api_url', 'mageio_api_api_key', 'mageio_api_api_secret','exclude_folders','resize_auto',
+        $configKey = array('api_key', 'api_secret','exclude_folders','resize_auto',
             'resize_image','min_size','max_size','compression_type_pdf','compression_type_png','compression_type_jpg','compression_type_gif');
         $coreConfig = Mage::getConfig();
         $post = $this->getRequest()->getPost();
- 
+       // var_dump($post);
         foreach ($configKey as $key) {            
             if (isset($post[$key])) {                
-                $coreConfig->saveConfig($key, Mage::helper('core')->escapeHtml($post[$key]));
+                $coreConfig->saveConfig("mageio_".$key, Mage::helper('core')->escapeHtml($post[$key]));
                 $response->success = true;
             }
         }
-
+		$cache = Mage::getSingleton('core/cache');
+        $cache->flush();
         $response->msg = "All modifications were saved!";
         exit(json_encode($response));
     }
@@ -69,8 +70,7 @@ Class Imagerecycle_Imagerecycle_IndexController extends Mage_Adminhtml_Controlle
         $api_id = $resourceR->fetchOne("SELECT api_id FROM {$resourceR->tableName}  WHERE `file` = " . $resourceR->quote($image));
         if ($api_id) {
 
-            $ioa = new ioaphp($this->blockImages->settings['mageio_api_api_key'], $this->blockImages->settings['mageio_api_api_secret']);
-            $ioa->setAPIUrl($this->blockImages->settings['mageio_api_api_url']);
+            $ioa = new ioaphp($this->blockImages->settings['api_key'], $this->blockImages->settings['api_secret']);            
             $return = $ioa->getImage($api_id);
 
             if (!isset($return->id)) {

@@ -26,25 +26,30 @@ if($order_by != '') {
 
 ?>
 
-<div class="content-header">
-	<div style="float:right; margin-top: 3px; position: relative">
+<div class="content-header">	
+	<h3 class="icon-head" style="color: #009999">
+		<?php echo Mage::helper('imagerecycle')->__('Images Recycle Manager') ?>
+	</h3>
+</div>
+
+<div>
+ <div style="float:right; margin-top: -45px; position: relative">
 		<a id="ir-setting" href="javascript:void(0)">Setting<i class="icon-setting"></i></a>		
 		<div class="ir-setting hidden">
 			<p style="margin-top: 8px; color: #6565cb; font-weight: bold"><?php echo Mage::helper('imagerecycle')->__('Image recycle setttings') ?></p>
 			<table class="form-table">
 				<tbody>	
-                                       <input id="installed_time" class="formData"  name="_mageio_settings[installed_time]" type="hidden" value="<?php echo $this->settings['installed_time'] ; ?>" size="50"/>
-                                        <input id="mageio_api_api_url" class="formData"  name="_mageio_settings[mageio_api_api_url]" type="hidden" value="<?php echo $this->settings['mageio_api_api_url'] ; ?>" size="50"/>
+                                       <input id="installed_time" class="formData"  name="_mageio_settings[installed_time]" type="hidden" value="<?php echo $this->settings['installed_time'] ; ?>" size="50"/>                                        
 					<tr>
 						<th scope="row"><?php echo Mage::helper('imagerecycle')->__('API key : ') ?></th>
 						<td colspan="2">						
-                                                    <input id="mageio_api_api_key" class="formData"  name="_mageio_settings[mageio_api_api_key]" type="text" value="<?php echo $this->escapeHtml($this->settings['mageio_api_api_key']) ; ?>" size="50"/>
+                                                    <input id="api_key" class="formData"  name="_mageio_settings[api_key]" type="text" value="<?php echo $this->escapeHtml($this->settings['api_key']) ; ?>" size="50"/>
 						</td>
 					</tr>
 					<tr>
 						<th scope="row"><?php echo Mage::helper('imagerecycle')->__('API secret : ') ?></th>
 						<td colspan="2">							
-                                                    <input id="mageio_api_api_secret" class="formData" name="_mageio_settings[mageio_api_api_secret]" type="text" value="<?php echo $this->escapeHtml($this->settings['mageio_api_api_secret']) ; ?>" size="50"/>
+                                                    <input id="api_secret" class="formData" name="_mageio_settings[api_secret]" type="text" value="<?php echo $this->escapeHtml($this->settings['api_secret']) ; ?>" size="50"/>
 						</td>
 					</tr>
                                         <tr>
@@ -74,7 +79,8 @@ if($order_by != '') {
                                         <tr>
 						<th scope="row" colspan="2"><?php echo Mage::helper('imagerecycle')->__('Image resize, max size (px)') ?></th>
 						<td>
-                                                    <input id="resize_image" class="formData" name="_mageio_settings[resize_image]" type="text" value="<?php echo $this->escapeHtml($this->settings['resize_image']) ; ?>" size="10"/>
+							<?php $resize_image = !is_null($this->settings['resize_image'])?$this->settings['resize_image'] : 1600; ?>
+                                                    <input id="resize_image" class="formData" name="_mageio_settings[resize_image]" type="text" value="<?php echo $this->escapeHtml($resize_image) ; ?>" size="10"/>
 						</td>
 					</tr>
                                         <tr>
@@ -90,7 +96,8 @@ if($order_by != '') {
                                             <th scope="row" colspan="2">
                                                 <?php echo Mage::helper('imagerecycle')->__('Max file size to optimize (Kb)') ?></th>
                                                 <td>
-                                                    <input id="max_size" class="formData" name="_mageio_settings[max_size]" type="text" value="<?php echo $this->escapeHtml($this->settings['max_size']) ; ?>" size="10"/>
+                                                    <?php $maxSize = !is_null($this->settings['max_size'])?$this->settings['max_size'] : 10000; ?>
+                                                    <input id="max_size" class="formData" name="_mageio_settings[max_size]" type="text" value="<?php echo $this->escapeHtml($maxSize) ; ?>" size="10"/>
 						</td>                                                
                                             </th>					
 					</tr>
@@ -158,13 +165,7 @@ if($order_by != '') {
 				</tbody>
 			</table>
 		</div>
-	</div>
-	<h3 class="icon-head" style="color: #009999">
-		<?php echo Mage::helper('imagerecycle')->__('Images Recycle Manager') ?>
-	</h3>
-</div>
-<div>
-    
+	</div>   
 <div class="scan-msg-box" style="display: none">
 	<div>
 		<p><?php echo Mage::helper('imagerecycle')->__("It may takes a few minutes for the first time of using Mage Image Recycle.") ?></p>

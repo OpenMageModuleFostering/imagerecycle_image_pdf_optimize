@@ -100,13 +100,11 @@ $j(document).ready(function() {
     //Change the setting
     $j('#ir-setting-save').bind('click', function(e) {
         e.preventDefault();
-        
         var data = {
-            form_key: window.FORM_KEY,
-            mageio_api_api_url: $j('#mageio_api_api_url').val(),
-            mageio_api_api_key: $j('#mageio_api_api_key').val(),
-            mageio_api_api_secret: $j('#mageio_api_api_secret').val(),
-            mageio_api_min_size: $j('#mageio_api_min_size').val(),
+            form_key: window.FORM_KEY,            
+            api_key: $j('#api_key').val(),
+            api_secret: $j('#api_secret').val(),
+            min_size: $j('#min_size').val(),
             exclude_folders :  $j('#exclude_folders').val(),
             resize_auto :    $j('#resize_auto').val(),
             resize_image :     $j('#resize_image').val(),

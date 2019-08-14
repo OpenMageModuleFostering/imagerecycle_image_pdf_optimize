@@ -18,23 +18,22 @@ Class Imagerecycle_Imagerecycle_Block_Images extends Mage_Page_Block_Html {
         //Include ioaphp class once
         include_once(Mage::getModuleDir('', 'Imagerecycle_Imagerecycle') . '/classes/ioa.class.php');
         //Get settings
-        $this->settings = array(
-            'mageio_api_api_url' => Mage::getStoreConfig('mageio_api_api_url'),
-            'mageio_api_api_key' => Mage::getStoreConfig('mageio_api_api_key'),
-            'mageio_api_api_secret' => Mage::getStoreConfig('mageio_api_api_secret'),            
-            'installed_time'  => Mage::getStoreConfig('installed_time'),
-            'exclude_folders'  => Mage::getStoreConfig('exclude_folders'),                        
-            'resize_auto'  => Mage::getStoreConfig('resize_auto'),    
-            'resize_image'  => Mage::getStoreConfig('resize_image'),    
-            'min_size'  => Mage::getStoreConfig('min_size'),    
-            'max_size'  => Mage::getStoreConfig('max_size'),    
-            'compression_type_pdf'  => Mage::getStoreConfig('compression_type_pdf'),    
-            'compression_type_png'  => Mage::getStoreConfig('compression_type_png'),    
-            'compression_type_jpg'  => Mage::getStoreConfig('compression_type_jpg'),    
-            'compression_type_gif'  => Mage::getStoreConfig('compression_type_gif'),    
-            'compression_type'  => Mage::getStoreConfig('compression_type'),
+        $this->settings = array(            
+            'api_key' => Mage::getStoreConfig('mageio_api_key'),
+            'api_secret' => Mage::getStoreConfig('mageio_api_secret'),            
+            'installed_time'  => Mage::getStoreConfig('mageio_installed_time'),
+            'exclude_folders'  => Mage::getStoreConfig('mageio_exclude_folders'),                        
+            'resize_auto'  => Mage::getStoreConfig('mageio_resize_auto'),    
+            'resize_image'  => Mage::getStoreConfig('mageio_resize_image'),    
+            'min_size'  => Mage::getStoreConfig('mageio_min_size'),    
+            'max_size'  => Mage::getStoreConfig('mageio_max_size'),    
+            'compression_type_pdf'  => Mage::getStoreConfig('mageio_compression_type_pdf'),    
+            'compression_type_png'  => Mage::getStoreConfig('mageio_compression_type_png'),    
+            'compression_type_jpg'  => Mage::getStoreConfig('mageio_compression_type_jpg'),    
+            'compression_type_gif'  => Mage::getStoreConfig('mageio_compression_type_gif'),    
+            'compression_type'  => Mage::getStoreConfig('mageio_compression_type'),
         );
-        if(empty($this->settings['mageio_api_api_url']) ) { $this->settings['mageio_api_api_url'] = 'http://api.imagerecycle.com/v1/'; }
+        
         if(empty($this->settings['compression_type']) ) { $this->settings['compression_type'] = 'lossy'; }        
         if (!empty($this->settings['exclude_folders'])) {
             $this->ignoredPath = explode(',',$this->settings['exclude_folders']);          
@@ -110,8 +109,8 @@ Class Imagerecycle_Imagerecycle_Block_Images extends Mage_Page_Block_Html {
         $optimizedFiles = $resourceR->fetchAssoc($sql);       
 
         $this->totalOptimizedImages = count($optimizedFiles);
-        $min_size = isset($this->settings['min_size']) ? (int)$this->settings['min_size']*1024 : '0';
-        $max_size =  !empty($this->settings['max_size']) ? (int)$this->settings['max_size'] * 1024 : 1024*1024*1024; //1GB
+        $min_size = isset($this->settings['min_size']) ? (int)$this->settings['min_size']*1024 : 1* 1024;
+        $max_size =  !empty($this->settings['max_size']) ? (int)$this->settings['max_size'] * 1024 : 10000 * 1024; 
         $images = array();
         
         $base_dir = Mage::getBaseDir();
